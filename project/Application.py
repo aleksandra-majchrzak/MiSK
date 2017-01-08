@@ -122,10 +122,15 @@ class Application(object):
         plt.axis([0, 100, 0, 50])
 
         
-        self.board[25][0] = 10
+        self.board[25][0] = 20
         
         self.mat = self.ax.matshow(self.board, cmap = plt.get_cmap('Greens'))
         
+        plt.colorbar(self.mat, fraction=0.046, pad=0.04)
+        self.ax.set_yticklabels(['']+['-15', '-5', '5', '15', '25'])
+        
+        self.ax.set_ylabel('y')
+        self.ax.set_xlabel('x')
         
         axSeeds = plt.axes([0.25, 0.25, 0.63, 0.03])
         self.sSeeds = Slider(axSeeds, "Number of seeds", 50, 5000, valinit=self.n)
@@ -154,7 +159,9 @@ class Application(object):
         
         self.onCalculateClick(None)
         
-
+        self.ax.set_title('Seed dispersal', y=1.08)
+        
+        
         
         plt.show()
         

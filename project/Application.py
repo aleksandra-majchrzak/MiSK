@@ -32,14 +32,14 @@ class Application(object):
         
         
     def calculateGauss(self):
-        print 'in calculateGauss'
+        #print 'in calculateGauss'
         
         
         for i in range(len(self.board)):
             y = np.abs(i - 25)
             
             #print 'i: ' +  str(i)
-            print 'y: ' + str(y)
+            #print 'y: ' + str(y)
             
             
             for j in range(len(self.board[0])):
@@ -49,7 +49,7 @@ class Application(object):
                     x = 0.0001
                 
                 #print 'j ' +  str(j)
-                print 'x: ' + str(x)
+                #print 'x: ' + str(x)
                 
                 frac1 = (self.n*self.zeroVelocity) / (2* np.pi  * self.windSpeed * self.yVariation(x) * self.zVariation(x))
                 elem1 = - np.square(y) /  (2*np.square(self.yVariation(x)))
@@ -57,7 +57,7 @@ class Application(object):
                 
                 self.board[i][j] = frac1 * np.exp(elem1 - elem2)
                 
-                print 'board: ' + str(self.board[i][j])
+                #print 'board: ' + str(self.board[i][j])
         
         
         # powinno byc w okolicy 0.12 m/s    - plumed str 5
@@ -76,13 +76,13 @@ class Application(object):
         
         
     def onCalculateClick(self, event):
-        print 'button clicked'
+        #print 'button clicked'
         self.calculateGauss()
         self.mat.set_data(self.board)
 
     
     def onResetClick(self, event):
-        print 'reset clicked'
+        #print 'reset clicked'
         
         if self.sSeeds != None and self.sHeight != None and self.sWindSpeed != None and self.sZeroVelocity != None:
             self.sSeeds.reset()

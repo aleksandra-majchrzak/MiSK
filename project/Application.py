@@ -64,14 +64,14 @@ class Application(object):
     def yVariation(self, x):
         A = 1 # wspl dyfuzji
        
-        value = np.sqrt((2*A*np.abs(x))/self.windSpeed)
+        value = np.sqrt((2.0*A*np.abs(x))/self.windSpeed)
         return value
         
         # powinno byc w okolicy 0.5 m/s 
     def zVariation(self, x):    # to powinno wygladac jakos inaczej
         A = 2 # wspl dyfuzji
         
-        value = np.sqrt((2*A*np.abs(x))/self.windSpeed)
+        value = np.sqrt((2.0*A*np.abs(x))/self.windSpeed)
         return value
         
         
@@ -114,15 +114,41 @@ class Application(object):
         self.n = val
      
         
+    def onDandelionClick(self, event):
+        #print "onDandelionClick"
+        if self.sSeeds != None and self.sHeight != None and self.sWindSpeed != None and self.sZeroVelocity != None:
+            self.sSeeds.set_val(100)
+            self.sHeight.set_val(0.2)
+            self.sWindSpeed.reset()
+            self.sZeroVelocity.set_val(0.5)
+            self.onCalculateClick(None)
+        
+    
+    def onMapleClick(self, event):
+        if self.sSeeds != None and self.sHeight != None and self.sWindSpeed != None and self.sZeroVelocity != None:
+            self.sSeeds.set_val(2000)
+            self.sHeight.set_val(20)
+            self.sWindSpeed.reset()
+            self.sZeroVelocity.set_val(1.01)
+            self.onCalculateClick(None)
+    
+    def onFirClick(self, event):
+        if self.sSeeds != None and self.sHeight != None and self.sWindSpeed != None and self.sZeroVelocity != None:
+            self.sSeeds.set_val(5000)
+            self.sHeight.set_val(30)
+            self.sWindSpeed.reset()
+            self.sZeroVelocity.set_val(1.06)
+            self.onCalculateClick(None)
+        
     def start(self):
         
-        self.fig, self.ax = plt.subplots()
+        self.fig, self.ax = plt.subplots(figsize=(13, 10))
         
         plt.subplots_adjust(left=0.1, bottom=0.35)
         plt.axis([0, 100, 0, 50])
 
         
-        self.board[25][0] = 20
+        self.board[25][0] = 10
         
         self.mat = self.ax.matshow(self.board, cmap = plt.get_cmap('Greens'))
         
@@ -132,19 +158,19 @@ class Application(object):
         self.ax.set_ylabel('y')
         self.ax.set_xlabel('x')
         
-        axSeeds = plt.axes([0.25, 0.25, 0.63, 0.03])
+        axSeeds = plt.axes([0.3, 0.25, 0.63, 0.03])
         self.sSeeds = Slider(axSeeds, "Number of seeds", 50, 5000, valinit=self.n)
         self.sSeeds.on_changed(self.onSeedsNumChanged)
         
-        axHeight = plt.axes([0.25, 0.2, 0.63, 0.03])
+        axHeight = plt.axes([0.3, 0.2, 0.63, 0.03])
         self.sHeight = Slider(axHeight, "Height", 0.1, 50, valinit=self.height)
         self.sHeight.on_changed(self.onHeightChanged)
         
-        axWindSpeed = plt.axes([0.25, 0.15, 0.63, 0.03])
-        self.sWindSpeed = Slider(axWindSpeed, "Wind speed", 0.1, 25, valinit=self.windSpeed)
+        axWindSpeed = plt.axes([0.3, 0.15, 0.63, 0.03])
+        self.sWindSpeed = Slider(axWindSpeed, "Wind speed", 0.1, 21, valinit=self.windSpeed) # max 8 w skali Beauforta
         self.sWindSpeed.on_changed(self.onWindSpeedChanged)
         
-        axZeroVelocity = plt.axes([0.25, 0.1, 0.63, 0.03])
+        axZeroVelocity = plt.axes([0.3, 0.1, 0.63, 0.03])
         self.sZeroVelocity = Slider(axZeroVelocity, "Free falling velocity", 0.07, 7, valinit=self.zeroVelocity)
         self.sZeroVelocity.on_changed(self.onZeroVelocityChanged)
         
@@ -156,6 +182,19 @@ class Application(object):
         axReset = plt.axes([0.85, 0.02, 0.11, 0.06])
         bReset = Button(axReset, 'Reset')
         bReset.on_clicked(self.onResetClick)
+        
+        
+        axDandelion = plt.axes([0.03, 0.20, 0.11, 0.06])
+        bDandelion = Button(axDandelion, 'Dandelion')
+        bDandelion.on_clicked(self.onDandelionClick)
+        
+        axMaple = plt.axes([0.03, 0.15, 0.11, 0.06])
+        bMaple = Button(axMaple, 'Maple')
+        bMaple.on_clicked(self.onMapleClick)
+        
+        axFir = plt.axes([0.03, 0.10, 0.11, 0.06])
+        bFir = Button(axFir, 'Fir')
+        bFir.on_clicked(self.onFirClick)
         
         self.onCalculateClick(None)
         

@@ -5,9 +5,8 @@ Created on 07.01.2017
 '''
 
 import numpy as np
-import matplotlib.pyplot as plt 
-import matplotlib.animation as animation
-from matplotlib.widgets import Button, Slider
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Button, Slider, RadioButtons
 
 class Application(object):
     '''
@@ -24,6 +23,8 @@ class Application(object):
         self.zeroVelocity = 2.3   # m/2
         self.height = 1       # m
         self.windSpeed = 2
+        
+        self.isBinary = False
         
         self.sHeight = None
         self.sSeeds = None
@@ -73,14 +74,26 @@ class Application(object):
         
         value = np.sqrt((2.0*A*np.abs(x))/self.windSpeed)
         return value
-        
+         
+         
+    def binarize(self):    
+        for i in range(len(self.board)):
+                    for j in range(len(self.board[0])):
+                        if self.board[i][j] >=1:
+                            self.board[i][j]=1
+                        else:
+                            self.board[i][j]=0    
         
     def onCalculateClick(self, event):
         #print 'button clicked'
         self.calculateGauss()
+        
+        if self.isBinary:
+            self.binarize()
+            
         self.mat.set_data(self.board)
 
-    
+                            
     def onResetClick(self, event):
         #print 'reset clicked'
         
@@ -96,6 +109,10 @@ class Application(object):
             self.zeroVelocity = self.sZeroVelocity.val
         
             self.calculateGauss()
+            
+            if self.isBinary:
+                self.binarize()
+            
             self.mat.set_data(self.board)
 
     
@@ -139,12 +156,17 @@ class Application(object):
             self.sWindSpeed.reset()
             self.sZeroVelocity.set_val(1.06)
             self.onCalculateClick(None)
+            
+    def onRadioClick(self, label):
+        self.isBinary = (label == "Binary")
+                    
+        self.onCalculateClick(None)
         
     def start(self):
         
-        self.fig, self.ax = plt.subplots(figsize=(13, 10))
+        self.fig, self.ax = plt.subplots(figsize=(15, 10))
         
-        plt.subplots_adjust(left=0.1, bottom=0.35)
+        plt.subplots_adjust(left=0.2, bottom=0.35)
         plt.axis([0, 100, 0, 50])
 
         
@@ -163,15 +185,15 @@ class Application(object):
         self.sSeeds.on_changed(self.onSeedsNumChanged)
         
         axHeight = plt.axes([0.3, 0.2, 0.63, 0.03])
-        self.sHeight = Slider(axHeight, "Height", 0.1, 50, valinit=self.height)
+        self.sHeight = Slider(axHeight, "Height (m)", 0.1, 50, valinit=self.height)
         self.sHeight.on_changed(self.onHeightChanged)
         
         axWindSpeed = plt.axes([0.3, 0.15, 0.63, 0.03])
-        self.sWindSpeed = Slider(axWindSpeed, "Wind speed", 0.1, 21, valinit=self.windSpeed) # max 8 w skali Beauforta
+        self.sWindSpeed = Slider(axWindSpeed, "Wind speed (m/s)", 0.1, 21, valinit=self.windSpeed) # max 8 w skali Beauforta
         self.sWindSpeed.on_changed(self.onWindSpeedChanged)
         
         axZeroVelocity = plt.axes([0.3, 0.1, 0.63, 0.03])
-        self.sZeroVelocity = Slider(axZeroVelocity, "Free falling velocity", 0.07, 7, valinit=self.zeroVelocity)
+        self.sZeroVelocity = Slider(axZeroVelocity, "Free falling velocity (m/s)", 0.07, 7, valinit=self.zeroVelocity)
         self.sZeroVelocity.on_changed(self.onZeroVelocityChanged)
         
         
@@ -195,6 +217,12 @@ class Application(object):
         axFir = plt.axes([0.03, 0.10, 0.11, 0.06])
         bFir = Button(axFir, 'Fir')
         bFir.on_clicked(self.onFirClick)
+        
+        axMode = plt.axes([0.03, 0.6, 0.10, 0.15])
+        rMode = RadioButtons(axMode, ('Standard', 'Binary'))
+        rMode.on_clicked(self.onRadioClick)
+        axMode.set_title("Mode")
+
         
         self.onCalculateClick(None)
         

@@ -18,7 +18,7 @@ class Application(object):
         '''
         Constructor
         '''
-        self.board = [[0 for _ in range(100)] for _ in range(50)]
+        self.board = [[0 for _ in range(150)] for _ in range(50)]
         self.n = 100
         self.zeroVelocity = 2.3   # m/2
         self.height = 1       # m
@@ -76,13 +76,26 @@ class Application(object):
         return value
          
          
-    def binarize(self):    
+    def binarize(self): 
+        
+        maxI = 0
+        maxJ = 0
+        
+        for i in range(len(self.board)):
+            for j in range(len(self.board[0])):            
+                if self.board[i][j] >= self.board[maxI][maxJ]:
+                    maxI = i
+                    maxJ = j
+           
         for i in range(len(self.board)):
                     for j in range(len(self.board[0])):
+                        
                         if self.board[i][j] >=1:
                             self.board[i][j]=1
                         else:
                             self.board[i][j]=0    
+                            
+        self.board[maxI][maxJ] = 1000
         
     def onCalculateClick(self, event):
         #print 'button clicked'
@@ -92,6 +105,8 @@ class Application(object):
             self.binarize()
             
         self.mat.set_data(self.board)
+        
+        self.computeArea()
 
                             
     def onResetClick(self, event):
@@ -162,12 +177,37 @@ class Application(object):
                     
         self.onCalculateClick(None)
         
+        
+    def computeArea(self):
+        print "wind: " + str(self.windSpeed)
+        print "area: " + str(sum([sum(i) for i in self.board]))
+        
+        maxX = 0
+        
+        for i in range(len(self.board)):
+            for j in range(len(self.board[0])):
+                if self.board[i][j] >=1 and j > maxX:
+                    maxX = j
+                
+        
+        print "distance X: "  + str(maxX)
+        
+        maxY = 0
+        
+        for i in range(len(self.board)):
+            for j in range(len(self.board[0])):
+                if self.board[i][j] >=1 and i > maxY:
+                    maxY = i
+                
+        
+        print "distance Y: "  + str(maxY - 25)
+        
     def start(self):
         
         self.fig, self.ax = plt.subplots(figsize=(15, 10))
         
         plt.subplots_adjust(left=0.2, bottom=0.35)
-        plt.axis([0, 100, 0, 50])
+        plt.axis([0, 120, 0, 50])
 
         
         self.board[25][0] = 10

@@ -18,7 +18,7 @@ class Application(object):
         '''
         Constructor
         '''
-        self.board = [[0 for _ in range(150)] for _ in range(50)]
+        self.board = [[0 for _ in range(300)] for _ in range(50)]
         self.n = 100
         self.zeroVelocity = 2.3   # m/2
         self.height = 1       # m
@@ -31,6 +31,9 @@ class Application(object):
         self.sWindSpeed = None
         self.sZeroVelocity = None
         
+        self.areas = [0 for _ in  range(61)]
+        self.xs = [0 for _ in  range(61)]
+        self.ys = [0 for _ in  range(61)]
         
     def calculateGauss(self):
         #print 'in calculateGauss'
@@ -97,6 +100,7 @@ class Application(object):
                             
         self.board[maxI][maxJ] = 1000
         
+    #def onCalculateClick(self, event ''', ind'''):
     def onCalculateClick(self, event):
         #print 'button clicked'
         self.calculateGauss()
@@ -106,6 +110,7 @@ class Application(object):
             
         self.mat.set_data(self.board)
         
+        #self.computeArea(ind)
         self.computeArea()
 
                             
@@ -179,8 +184,15 @@ class Application(object):
         
         
     def computeArea(self):
-        print "wind: " + str(self.windSpeed)
-        print "area: " + str(sum([sum(i) for i in self.board]))
+        
+    #    print str(self.windSpeed)
+        
+    #    if self.isBinary:
+    #        print  str(sum([sum(i) for i in self.board]) -999) + ", "
+    #        self.areas[ind] = sum([sum(i) for i in self.board]) -999
+    #    else:
+    #        print  str(sum([sum(i) for i in self.board])) + ", "
+            
         
         maxX = 0
         
@@ -190,7 +202,8 @@ class Application(object):
                     maxX = j
                 
         
-        print "distance X: "  + str(maxX)
+    #    print  str(maxX) + ", "
+    #    self.xs[ind] = maxX
         
         maxY = 0
         
@@ -200,7 +213,10 @@ class Application(object):
                     maxY = i
                 
         
-        print "distance Y: "  + str(maxY - 25)
+    #    print  str(maxY - 25) + ", "
+    #    self.ys[ind] = (maxY - 25) *2
+        
+    #    print ""
         
     def start(self):
         
@@ -268,7 +284,49 @@ class Application(object):
         
         self.ax.set_title('Seed dispersal', y=1.08)
         
+        '''
+        self.onRadioClick("Binary")
         
+        self.onDandelionClick(None)
+        self.sSeeds.set_val(500)
+        ind = 0
+        
+        for i in np.arange(1, 7.1, 0.1):
+            self.sWindSpeed.set_val(i)
+            self.onCalculateClick(None, ind)
+            ind = ind +1
+            
+        print self.areas
+        print self.xs
+        print self.ys
+            
+        print ""
+        
+        self.onMapleClick(None)
+        ind = 0
+        
+        for i in np.arange(1, 7.1, 0.1):
+            self.sWindSpeed.set_val(i)
+            self.onCalculateClick(None, ind)
+            ind = ind +1
+            
+        print self.areas
+        print self.xs
+        print self.ys
+        print ""
+        
+        self.onFirClick(None)
+        ind = 0
+        
+        for i in np.arange(1, 7.1, 0.1):
+            self.sWindSpeed.set_val(i)
+            self.onCalculateClick(None, ind)
+            ind = ind +1
+        
+        print self.areas
+        print self.xs
+        print self.ys
+        '''
         
         plt.show()
         
